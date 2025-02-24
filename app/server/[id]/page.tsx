@@ -7,11 +7,12 @@ interface Post {
 }
 
 interface DSCProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const DynamicServerComponent = async ({ params }: DSCProps) => {
-  const res = await fetch(`https://dummyjson.com/posts/${params.id}`, {
+  const id = (await params).id;
+  const res = await fetch(`https://dummyjson.com/posts/${id}`, {
     cache: "no-store",
   });
   const post: Post = await res.json();

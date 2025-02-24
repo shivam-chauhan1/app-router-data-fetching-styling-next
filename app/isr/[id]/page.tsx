@@ -7,7 +7,7 @@ interface Post {
 }
 
 interface ISRProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateStaticParams() {
@@ -20,7 +20,8 @@ export async function generateStaticParams() {
 }
 
 const DynamicISRComponent = async ({ params }: ISRProps) => {
-  const res = await fetch(`https://dummyjson.com/posts/${params.id}`, {
+  const id = (await params).id;
+  const res = await fetch(`https://dummyjson.com/posts/${id}`, {
     next: { revalidate: 10 }, // ISR every 10 seconds
   });
   const post: Post = await res.json();
